@@ -6,120 +6,119 @@
     <title>人民主義黨 People's Democracy Party</title>
     <style>
         :root {
-            --pdp-blue: #1a365d;
-            --pdp-gold: #f6ad55;
-            --text-gray: #4a5568;
+            --pdp-navy: #102a43;
+            --pdp-gold: #c99a2e;
+            --pdp-white: #ffffff;
+            --pdp-gray: #f0f4f8;
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; margin: 0; background-color: #f7fafc; color: #2d3748; }
+        body { font-family: "PingFang TC", "Noto Sans TC", sans-serif; margin: 0; background-color: var(--pdp-gray); color: #102a43; }
         
         /* 導覽列 */
-        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo-box { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 45px; height: 45px; border-radius: 50%; background: #eee; }
+        nav { background: var(--pdp-navy); padding: 15px 8%; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .logo-placeholder { width: 50px; height: 50px; border-radius: 50%; background: var(--pdp-white); border: 2px solid var(--pdp-gold); margin-right: 15px; }
 
-        /* 主視覺 */
-        .hero { background: linear-gradient(rgba(26, 54, 93, 0.9), rgba(26, 54, 93, 0.9)), url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80'); 
-                background-size: cover; background-position: center; color: white; padding: 120px 5%; text-align: center; }
-        .hero h1 { font-size: 3.5rem; margin: 0; letter-spacing: 4px; }
-        .hero p { font-size: 1.25rem; opacity: 0.8; margin-top: 15px; }
+        /* 主視覺：十六字口號 */
+        .hero { 
+            background: linear-gradient(rgba(16, 42, 67, 0.85), rgba(16, 42, 67, 0.85)), url('https://images.unsplash.com/photo-1540914124281-342587941389?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover; background-position: center;
+            height: 500px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: var(--pdp-white); text-align: center; border-bottom: 8px solid var(--pdp-gold);
+        }
+        .hero h1 { font-size: 3.8rem; margin: 0; letter-spacing: 12px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero p { font-size: 1.5rem; margin-top: 20px; letter-spacing: 5px; opacity: 0.9; }
 
-        /* 三大理念 */
-        .platform-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
-        .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
-        .p-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--pdp-gold); }
-        .p-card h3 { color: var(--pdp-blue); font-size: 1.8rem; margin-top: 0; }
-
-        /* 關於我們 */
-        .about-section { background: white; padding: 80px 5%; text-align: center; }
-        .content-wrap { max-width: 800px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; }
-        .badge { display: inline-block; background: #edf2f7; padding: 5px 15px; border-radius: 50px; font-size: 0.85rem; margin-bottom: 20px; color: #718096; }
-
-        /* 頁尾 */
-        footer { background: #1a202c; color: #a0aec0; padding: 60px 5% 30px; text-align: center; }
-        .footer-logo { font-weight: bold; color: white; margin-bottom: 10px; }
-        .copyright { font-size: 0.8rem; margin-top: 40px; border-top: 1px solid #2d3748; padding-top: 20px; }
+        /* 核心主張 */
+        .section { padding: 100px 8%; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 60px; position: relative; }
+        .section-title::after { content: ''; width: 80px; height: 5px; background: var(--pdp-gold); position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); }
         
-        /* 隱藏入口：偽裝成一個普通的標點符號，且不顯示滑鼠手型 */
-        #sys-trace { cursor: default; user-select: none; opacity: 0.5; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card { background: white; padding: 45px 30px; border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .card h3 { color: var(--pdp-navy); font-size: 1.8rem; margin-top: 0; margin-bottom: 20px; }
+        .card p { color: #486581; line-height: 1.8; }
+
+        /* 底部資訊 */
+        footer { background: #0a1929; color: #627d98; padding: 80px 8% 40px; text-align: center; }
+        .footer-logo { font-size: 1.5rem; color: var(--pdp-white); letter-spacing: 3px; margin-bottom: 20px; }
+        .copyright { margin-top: 60px; font-size: 0.85rem; border-top: 1px solid #243b53; padding-top: 30px; }
+        
+        /* 隱藏入口按鈕：偽裝成普通的裝飾線條 */
+        .hidden-line { width: 30px; height: 2px; background: #243b53; margin: 20px auto; cursor: default; }
     </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo-box">
-        <div class="logo-img"></div>
-        <div>
-            <div style="font-weight: bold; color: var(--pdp-blue);">人民主義黨</div>
-            <div style="font-size: 0.75rem; color: #718096;">People's Democracy Party</div>
-        </div>
+    <div class="logo-placeholder"></div>
+    <div style="color: white;">
+        <div style="font-size: 1.4rem; font-weight: bold; letter-spacing: 2px;">人民主義黨</div>
+        <div style="font-size: 0.8rem; opacity: 0.7;">People's Democracy Party</div>
     </div>
 </nav>
 
 <section class="hero">
-    <h1>人民主義，為民所立</h1>
-    <p>建立人民做主、權利、平等的民主新社會</p>
+    <h1>人民主義 統一中國</h1>
+    <p>光復中華 保衛台灣</p>
 </section>
 
-<section class="platform-section">
-    <div style="text-align: center;">
-        <h2 style="font-size: 2.2rem; color: var(--pdp-blue);">核心理念</h2>
-        <div style="width: 60px; height: 4px; background: var(--pdp-gold); margin: 20px auto;"></div>
-    </div>
-    <div class="platform-grid">
-        <div class="p-card">
+<section class="section">
+    <div class="section-title">三大核心理念</div>
+    <div class="grid">
+        <div class="card">
             <h3>人民做主</h3>
-            <p>主權回歸公民，透過制度改革讓每一位國民的聲音都能實質影響決策。</p>
+            <p>建立真正屬於全體國民的決策機制，確保國家權力運行透明，聽取基層最真實的聲音。</p>
         </div>
-        <div class="p-card">
+        <div class="card">
             <h3>人民權利</h3>
-            <p>堅決捍衛憲法賦予的自由與權利，不讓公權力侵犯個人尊嚴與生活。</p>
+            <p>堅決捍衛憲法賦予的公民自由與法律尊嚴，確保每位同胞的權益不受任何形式的侵犯。</p>
         </div>
-        <div class="p-card">
+        <div class="card">
             <h3>人民平等</h3>
-            <p>消除社會資源分配不均，確保每一位國人在法律與機會面前享有真正的平等。</p>
+            <p>致力於消除社會階級隔閡與資源分配不公，在機會平等的基礎上實現真正的共榮社會。</p>
         </div>
     </div>
 </section>
 
-<section class="about-section">
-    <div class="content-wrap">
-        <span class="badge">預備備案中</span>
-        <p>「人民主義黨」創立於中華民國一百一十四年五月二十七日。</p>
-        <p>我們堅信，真正的民主不應只是四年一次的投票，而是日常生活中對公平、正義與權利的實踐。目前政黨正處於籌備與成長階段，我們誠摯邀請志同道合的朋友加入，與我們共同開創台灣政治的新篇章。</p>
-        <p style="margin-top: 30px; color: var(--pdp-blue); font-weight: bold;">聯繫我們：Instagram @peoples_democracy_party</p>
+<section style="background: white; padding: 80px 8%; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="color: var(--pdp-navy);">建黨宣告</h2>
+        <p style="font-size: 1.1rem; line-height: 2; color: #334e68;">
+            本黨成立於中華民國一百一十四年五月二十七日，以「人民主義」為崇高理想。<br>
+            我們處於籌備備案階段，立志為民族復興與民主深化奉獻力量。
+        </p>
     </div>
 </section>
 
 <footer>
-    <div class="footer-logo">人民主義黨 People's Democracy Party</div>
+    <div class="footer-logo">人民主義黨</div>
+    <div class="hidden-line" id="secure-access"></div>
     <div class="copyright">
-        © 2026 People's Democracy Party. All rights reserved<span id="sys-trace">.</span>
+        © 2026 People's Democracy Party. 版權所有 翻印必究
     </div>
 </footer>
 
 <script>
-    /**
-     * 隱藏通道邏輯 (偽裝模式)
-     * 在頁尾最後一個點 '.' 連續點擊 7 次觸發。
-     * 程式碼使用混淆命名，減少被關鍵字搜尋到的機率。
-     */
+    /* 隱藏入口邏輯：
+       在頁尾那條深色短橫線 (id: secure-access) 上連續點擊 8 次觸發。
+    */
     (function(){
-        let _k = 0;
-        const _v = document.getElementById('sys-trace');
-        _v.addEventListener('click', function() {
-            _k++;
-            if (_k >= 7) {
-                // 偽裝成系統檢測視窗
-                const _auth = prompt("System Debug: Enter Access Token to continue.");
-                if (_auth === "PDP888") { 
-                    // 導向你的編輯頁面
-                    window.location.href = "pdp_management_system.html";
+        let _c = 0;
+        const _trigger = document.getElementById('secure-access');
+        
+        _trigger.addEventListener('click', () => {
+            _c++;
+            if (_c >= 8) {
+                // 偽裝成系統檢核彈窗
+                const _key = prompt("Security Check: Enter Access Code");
+                // 預設代碼：1140527 (以創立日期作為暗號)
+                if (_key === "1140527") {
+                    alert("驗證成功，正在載入黨務管理介面...");
+                    window.location.href = "pdp_internal_editor.html"; 
                 }
-                _k = 0;
+                _c = 0;
             }
         });
-        // 3秒後自動重置點擊次數，增加進入難度
-        setInterval(() => { _k = 0; }, 3000);
     })();
 </script>
 
