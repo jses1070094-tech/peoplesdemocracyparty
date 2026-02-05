@@ -3,51 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>人民主義黨 People's Democracy Party</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { margin: 0; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; transition: background 0.5s; }
-        #render-container { min-height: 100vh; padding-bottom: 50px; }
-        footer { text-align: center; padding: 20px; color: #999; font-size: 12px; background: rgba(0,0,0,0.05); }
-        #admin-gate { cursor: default; user-select: none; }
+        body { margin: 0; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; }
+        #content-area { min-height: 100vh; }
+        footer { text-align: center; padding: 30px; color: #999; font-size: 12px; background: #f9f9f9; }
+        #admin-link { cursor: default; user-select: none; color: #eee; }
     </style>
 </head>
 <body>
 
-    <div id="render-container">
-        <div style="text-align:center; padding-top:200px; color:#666;">載入黨務資訊中...</div>
+    <div id="content-area">
+        <div style="text-align:center; padding-top:100px;">載入黨務資訊中...</div>
     </div>
 
     <footer>
-        © 2026 People's Democracy Party <span id="admin-gate">.</span>
+        © 2026 People's Democracy Party <span id="admin-link">.</span>
     </footer>
 
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
-            authDomain: "weifengtimer-c7af4.firebaseapp.com",
             databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
             projectId: "weifengtimer-c7af4",
-            storageBucket: "weifengtimer-c7af4.firebasestorage.app",
             appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        db.ref('webContent').on('value', (snapshot) => {
+        
+        // 即時抓取雲端內容
+        firebase.database().ref('webContent').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('render-container').innerHTML = data.html;
-                document.body.style.backgroundColor = data.bgColor || '#ffffff';
+                document.getElementById('content-area').innerHTML = data.html;
             } else {
-                document.getElementById('render-container').innerHTML = "<h1 style='text-align:center;padding-top:100px;'>歡迎使用人民主義黨網站</h1><p style='text-align:center;'>請前往編輯頁面發佈首份政見。</p>";
+                document.getElementById('content-area').innerHTML = "<h1 style='text-align:center;margin-top:100px;'>人民主義 統一中國</h1><p style='text-align:center;'>請進入後台開始編輯。</p>";
             }
         });
 
-        let clicks = 0;
-        document.getElementById('admin-gate').onclick = () => {
-            clicks++;
-            if(clicks === 5) window.location.href = "./peopleparty/";
+        // 連點五下底部的點進入登入頁
+        let count = 0;
+        document.getElementById('admin-link').onclick = () => {
+            count++;
+            if(count === 5) window.location.href = "./peopleparty/";
         };
     </script>
 </body>

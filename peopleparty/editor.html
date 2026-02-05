@@ -2,23 +2,23 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>PDP 雲端指揮中心</title>
+    <title>PDP 網頁設計中心</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <style>
-        body { margin: 0; display: flex; flex-direction: column; height: 100vh; background: #f0f2f5; font-family: sans-serif; }
-        .nav { background: #1a202c; color: #c99a2e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c99a2e; }
-        .save-btn { background: #c99a2e; border: none; padding: 10px 30px; font-weight: bold; cursor: pointer; border-radius: 5px; color: black; }
-        #editor-container { flex: 1; background: white; margin: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; background: #f0f2f5; }
+        .header { background: #1a202c; color: #c99a2e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c99a2e; }
+        .save-btn { background: #c99a2e; color: black; border: none; padding: 10px 25px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        #editor-container { flex: 1; background: white; margin: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-    <div class="nav">
+    <div class="header">
         <b>人民主義黨 - 雲端指揮中心</b>
-        <button class="save-btn" onclick="save()">發佈更新 (同步全網)</button>
+        <button class="save-btn" onclick="saveToCloud()">發佈更新 (同步到首頁)</button>
     </div>
     <div id="editor-container"></div>
 
@@ -32,13 +32,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 登入檢查
+        // 登入狀態守衛
         firebase.auth().onAuthStateChanged(user => { if (!user) window.location.href = "index.html"; });
 
         // 初始化編輯器
         var quill = new Quill('#editor-container', {
             modules: { toolbar: [
-                [{ 'header': [1, 2, false] }],
+                [{ 'header': [1, 2, 3, false] }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'align': [] }],
@@ -47,16 +47,16 @@
             theme: 'snow'
         });
 
-        // 讀取現有內容
+        // 載入雲端內容
         db.ref('webContent').once('value').then(s => {
             if(s.val()) quill.root.innerHTML = s.val().html;
         });
 
-        function save() {
+        function saveToCloud() {
             const html = quill.root.innerHTML;
             db.ref('webContent').set({ html })
-                .then(() => alert("✅ 發佈成功！現在所有人打開網頁都能看到更新了。"))
-                .catch(e => alert("錯誤：可能是規則沒設好 " + e.message));
+                .then(() => alert("✅ 儲存成功！首頁內容已同步。"))
+                .catch(e => alert("儲存失敗！請確認 Realtime Database 規則是否發佈。"));
         }
     </script>
 </body>
