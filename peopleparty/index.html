@@ -2,39 +2,40 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>PDP 雲端開發系統</title>
+    <title>PDP 黨務全功能開發系統</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
+    
     <style>
-        body { font-family: sans-serif; margin: 0; background: #1a202c; display: flex; flex-direction: column; height: 100vh; }
-        .toolbar { background: #2d3748; color: white; padding: 15px; display: flex; gap: 10px; align-items: center; border-bottom: 3px solid #c99a2e; }
-        .editor-stage { flex: 1; margin: 20px; background: white; padding: 40px; overflow-y: auto; outline: none; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        button { background: #4a5568; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; }
-        button:hover { background: #718096; }
-        .save-btn { background: #c99a2e; color: black; font-weight: bold; margin-left: auto; }
+        body { font-family: sans-serif; margin: 0; background: #2d3748; display: flex; flex-direction: column; height: 100vh; }
+        .header-bar { background: #1a202c; color: #c99a2e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c99a2e; }
+        .save-btn { background: #c99a2e; color: #000; border: none; padding: 10px 25px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 16px; }
+        .save-btn:hover { background: #e2b13c; }
+        #editor-container { flex: 1; background: white; padding: 20px; overflow-y: auto; }
+        .config-panel { background: #334155; color: white; padding: 10px 20px; font-size: 14px; display: flex; gap: 20px; }
     </style>
 </head>
 <body>
 
-<div class="toolbar">
-    <b>人民主義黨 編輯模式</b>
-    <button onclick="document.execCommand('formatBlock', false, 'h1')">大標題</button>
-    <button onclick="document.execCommand('formatBlock', false, 'h2')">次標題</button>
-    <button onclick="document.execCommand('foreColor', false, '#c99a2e')">金色字</button>
-    <button onclick="document.execCommand('insertUnorderedList')">列表</button>
-    <button onclick="setBg()">換頁面底色</button>
-    <button class="save-btn" onclick="saveToCloud()">發佈到全網</button>
+<div class="header-bar">
+    <div style="font-size: 1.2rem; font-weight: bold;">人民主義黨 - 雲端指揮中心</div>
+    <button class="save-btn" onclick="saveData()">發佈更新 (同步全網)</button>
 </div>
 
-<div id="editor" class="editor-stage" contenteditable="true">
-    <header style="text-align:center; background:#0a192f; color:white; padding:60px 20px; margin:-40px -40px 40px -40px;">
-        <h1>人民主義 統一中國</h1>
-        <p>光復中華 保衛台灣</p>
-    </header>
-    <p>點擊此處開始編寫你的政見...</p>
+<div class="config-panel">
+    <div>
+        頁面背景顏色：<input type="color" id="bgColorPicker" onchange="updateBg(this.value)">
+    </div>
+    <div id="sync-status">狀態：雲端連線中...</div>
+</div>
+
+<div id="editor-container">
+    <textarea name="editor1" id="editor1"></textarea>
 </div>
 
 <script>
+    // Firebase 設定
     const firebaseConfig = {
         apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
         authDomain: "weifengtimer-c7af4.firebaseapp.com",
@@ -46,31 +47,55 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 載入雲端現有資料
+    // 初始化 CKEditor (功能全開模式)
+    CKEDITOR.replace('editor1', {
+        height: '70vh',
+        uiColor: '#f1f5f9',
+        // 增加功能插件：顏色、字體、表格等
+        extraPlugins: 'colorbutton,font,justify,tableresize',
+        toolbar: [
+            { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview' ] },
+            { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
+            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            { name: 'links', items: [ 'Link', 'Unlink' ] },
+            { name: 'insert', items: [ 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak' ] },
+            '/',
+            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            { name: 'tools', items: [ 'Maximize' ] }
+        ]
+    });
+
+    // 從 Firebase 抓取舊資料填入編輯器
     db.ref('webContent').once('value').then((snapshot) => {
         const data = snapshot.val();
         if(data) {
-            document.getElementById('editor').innerHTML = data.html;
-            document.getElementById('editor').style.backgroundColor = data.bgColor;
+            CKEDITOR.instances.editor1.setData(data.html);
+            document.getElementById('bgColorPicker').value = data.bgColor || "#ffffff";
         }
+        document.getElementById('sync-status').innerText = "狀態：已載入雲端內容";
     });
 
-    function setBg() {
-        const color = prompt("輸入底色顏色 (例如 lightgray 或 #f0f0f0):", "#ffffff");
-        if(color) document.getElementById('editor').style.backgroundColor = color;
+    function updateBg(color) {
+        document.getElementById('editor-container').style.background = color;
     }
 
-    function saveToCloud() {
-        const html = document.getElementById('editor').innerHTML;
-        const bgColor = document.getElementById('editor').style.backgroundColor || "#ffffff";
-        
+    function saveData() {
+        const htmlData = CKEDITOR.instances.editor1.getData();
+        const bgColor = document.getElementById('bgColorPicker').value;
+
+        document.getElementById('sync-status').innerText = "狀態：發佈中...";
+
         db.ref('webContent').set({
-            html: html,
+            html: htmlData,
             bgColor: bgColor
         }).then(() => {
-            alert("發佈成功！首頁內容已同步。");
+            document.getElementById('sync-status').innerText = "狀態：發佈成功！";
+            alert("網頁已更新！您可以前往首頁查看效果。");
         }).catch(err => {
-            alert("儲存失敗，請檢查 Firebase Database 規則是否設為 true。");
+            alert("儲存失敗，請確認 Firebase Rules 是否設為 true。");
         });
     }
 </script>

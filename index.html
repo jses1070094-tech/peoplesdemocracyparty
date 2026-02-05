@@ -6,15 +6,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <style>
-        body { margin: 0; font-family: "PingFang TC", sans-serif; transition: background 0.5s; }
-        #render-container { min-height: 100vh; }
+        body { margin: 0; font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; transition: background 0.5s; }
+        #render-container { min-height: 100vh; padding-bottom: 50px; }
         footer { text-align: center; padding: 20px; color: #999; font-size: 12px; background: rgba(0,0,0,0.05); }
         #admin-gate { cursor: default; user-select: none; }
     </style>
 </head>
 <body>
 
-    <div id="render-container">載入黨務資訊中...</div>
+    <div id="render-container">
+        <div style="text-align:center; padding-top:200px; color:#666;">載入黨務資訊中...</div>
+    </div>
 
     <footer>
         © 2026 People's Democracy Party <span id="admin-gate">.</span>
@@ -24,7 +26,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
             authDomain: "weifengtimer-c7af4.firebaseapp.com",
-            databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com", // 自動生成的資料庫網址
+            databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
             projectId: "weifengtimer-c7af4",
             storageBucket: "weifengtimer-c7af4.firebasestorage.app",
             appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
@@ -32,24 +34,20 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 監聽雲端資料，有人編輯就會立刻變
         db.ref('webContent').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 document.getElementById('render-container').innerHTML = data.html;
                 document.body.style.backgroundColor = data.bgColor || '#ffffff';
             } else {
-                document.getElementById('render-container').innerHTML = "<h1 style='text-align:center;padding-top:100px;'>人民主義 統一中國</h1><p style='text-align:center;'>尚未發佈內容</p>";
+                document.getElementById('render-container').innerHTML = "<h1 style='text-align:center;padding-top:100px;'>歡迎使用人民主義黨網站</h1><p style='text-align:center;'>請前往編輯頁面發佈首份政見。</p>";
             }
         });
 
-        // 隱藏進入點
         let clicks = 0;
         document.getElementById('admin-gate').onclick = () => {
             clicks++;
-            if(clicks === 5) {
-                window.location.href = "./peopleparty/";
-            }
+            if(clicks === 5) window.location.href = "./peopleparty/";
         };
     </script>
 </body>
