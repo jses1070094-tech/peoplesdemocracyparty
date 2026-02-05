@@ -2,107 +2,77 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>PDP 黨務超級編輯器</title>
+    <title>PDP 雲端開發系統</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; margin: 0; background: #333; display: flex; flex-direction: column; height: 100vh; }
-        /* 上方工具列 */
-        .toolbar { background: #222; color: white; padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 2px solid #c99a2e; }
-        .btn { background: #444; color: white; border: 1px solid #666; padding: 5px 12px; cursor: pointer; border-radius: 3px; }
-        .btn:hover { background: #555; }
-        .save-btn { background: #c99a2e; border: none; font-weight: bold; }
-        
-        /* 畫布區 */
-        #canvas-wrapper { flex: 1; overflow-y: auto; padding: 40px; display: flex; justify-content: center; }
-        #web-canvas { 
-            width: 100%; max-width: 900px; background: white; min-height: 1200px; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5); padding: 50px; outline: none;
-        }
-        
-        /* 預設樣式指南 */
-        .section-box { border: 1px dashed #ccc; margin-bottom: 20px; padding: 20px; position: relative; }
+        body { font-family: sans-serif; margin: 0; background: #1a202c; display: flex; flex-direction: column; height: 100vh; }
+        .toolbar { background: #2d3748; color: white; padding: 15px; display: flex; gap: 10px; align-items: center; border-bottom: 3px solid #c99a2e; }
+        .editor-stage { flex: 1; margin: 20px; background: white; padding: 40px; overflow-y: auto; outline: none; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        button { background: #4a5568; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #718096; }
+        .save-btn { background: #c99a2e; color: black; font-weight: bold; margin-left: auto; }
     </style>
 </head>
 <body>
 
 <div class="toolbar">
-    <b style="color:#c99a2e; margin-right:20px;">PDP 萬能編輯器</b>
-    <button class="btn" onclick="addHeading()">+ 新增標題</button>
-    <button class="btn" onclick="addText()">+ 新增內文</button>
-    <button class="btn" onclick="changeBg()">更換背景色</button>
-    <button class="btn" onclick="document.execCommand('bold')"><b>B</b> 粗體</button>
-    <button class="btn" onclick="document.execCommand('foreColor', false, '#c99a2e')">金色字</button>
-    <button class="btn" onclick="document.execCommand('justifyCenter')">居中</button>
-    <button class="btn save-btn" onclick="exportHTML()">【儲存並取得程式碼】</button>
+    <b>人民主義黨 編輯模式</b>
+    <button onclick="document.execCommand('formatBlock', false, 'h1')">大標題</button>
+    <button onclick="document.execCommand('formatBlock', false, 'h2')">次標題</button>
+    <button onclick="document.execCommand('foreColor', false, '#c99a2e')">金色字</button>
+    <button onclick="document.execCommand('insertUnorderedList')">列表</button>
+    <button onclick="setBg()">換頁面底色</button>
+    <button class="save-btn" onclick="saveToCloud()">發佈到全網</button>
 </div>
 
-<div id="canvas-wrapper">
-    <div id="web-canvas" contenteditable="true">
-        <header style="text-align:center; background:#0a192f; color:white; padding:60px 20px; margin:-50px -50px 50px -50px;">
-            <h1 style="font-size:3.5rem; letter-spacing:10px;">人民主義 統一中國</h1>
-            <p style="font-size:1.5rem; letter-spacing:5px;">光復中華 保衛台灣</p>
-        </header>
-        
-        <div style="font-size:1.4rem; line-height:2; text-align:center;">
-            在此輸入你的政見、公告或黨員守則...
-        </div>
-    </div>
+<div id="editor" class="editor-stage" contenteditable="true">
+    <header style="text-align:center; background:#0a192f; color:white; padding:60px 20px; margin:-40px -40px 40px -40px;">
+        <h1>人民主義 統一中國</h1>
+        <p>光復中華 保衛台灣</p>
+    </header>
+    <p>點擊此處開始編寫你的政見...</p>
 </div>
 
 <script>
-    function addHeading() {
-        const h = document.createElement('h2');
-        h.innerText = "新標題區塊";
-        h.style.color = "#0a192f";
-        h.style.borderBottom = "2px solid #c99a2e";
-        document.getElementById('web-canvas').appendChild(h);
+    const firebaseConfig = {
+        apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
+        authDomain: "weifengtimer-c7af4.firebaseapp.com",
+        databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
+        projectId: "weifengtimer-c7af4",
+        storageBucket: "weifengtimer-c7af4.firebasestorage.app",
+        appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 載入雲端現有資料
+    db.ref('webContent').once('value').then((snapshot) => {
+        const data = snapshot.val();
+        if(data) {
+            document.getElementById('editor').innerHTML = data.html;
+            document.getElementById('editor').style.backgroundColor = data.bgColor;
+        }
+    });
+
+    function setBg() {
+        const color = prompt("輸入底色顏色 (例如 lightgray 或 #f0f0f0):", "#ffffff");
+        if(color) document.getElementById('editor').style.backgroundColor = color;
     }
 
-    function addText() {
-        const p = document.createElement('p');
-        p.innerText = "在此輸入新的段落內容...";
-        document.getElementById('web-canvas').appendChild(p);
-    }
-
-    function changeBg() {
-        const color = prompt("請輸入背景顏色代碼 (例如 #f4f4f4 或 white):", "white");
-        if(color) document.getElementById('web-canvas').style.background = color;
-    }
-
-    function exportHTML() {
-        const content = document.getElementById('web-canvas').innerHTML;
-        const bgColor = document.getElementById('web-canvas').style.background || 'white';
+    function saveToCloud() {
+        const html = document.getElementById('editor').innerHTML;
+        const bgColor = document.getElementById('editor').style.backgroundColor || "#ffffff";
         
-        const finalCode = `
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>人民主義黨</title>
-    <style>
-        body { margin:0; font-family:sans-serif; background:${bgColor}; }
-        footer { padding:40px; text-align:center; color:#999; font-size:12px; }
-    </style>
-</head>
-<body>
-    ${content}
-    <footer>
-        © 2026 People's Democracy Party 
-        <span onclick="location.href='./peopleparty/'" style="cursor:default;">.</span>
-    </footer>
-</body>
-</html>`;
-
-        // 彈出視窗讓使用者複製
-        const textarea = document.createElement('textarea');
-        textarea.value = finalCode.trim();
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        
-        alert("程式碼已自動複製！\n\n現在請回到 GitHub 開啟 index.html，把全部內容全選刪除，然後按 Ctrl+V 貼上，最後儲存即可！");
+        db.ref('webContent').set({
+            html: html,
+            bgColor: bgColor
+        }).then(() => {
+            alert("發佈成功！首頁內容已同步。");
+        }).catch(err => {
+            alert("儲存失敗，請檢查 Firebase Database 規則是否設為 true。");
+        });
     }
 </script>
-
 </body>
 </html>
