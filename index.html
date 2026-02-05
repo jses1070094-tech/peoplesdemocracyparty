@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人民主義黨 People's Democracy Party</title>
+    <style>
+        :root {
+            --pdp-blue: #1a365d;
+            --pdp-gold: #f6ad55;
+            --text-gray: #4a5568;
+        }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; margin: 0; background-color: #f7fafc; color: #2d3748; }
+        
+        /* 導覽列 */
+        nav { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo-box { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 45px; height: 45px; border-radius: 50%; background: #eee; }
+
+        /* 主視覺 */
+        .hero { background: linear-gradient(rgba(26, 54, 93, 0.9), rgba(26, 54, 93, 0.9)), url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80'); 
+                background-size: cover; background-position: center; color: white; padding: 120px 5%; text-align: center; }
+        .hero h1 { font-size: 3.5rem; margin: 0; letter-spacing: 4px; }
+        .hero p { font-size: 1.25rem; opacity: 0.8; margin-top: 15px; }
+
+        /* 三大理念 */
+        .platform-section { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
+        .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .p-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--pdp-gold); }
+        .p-card h3 { color: var(--pdp-blue); font-size: 1.8rem; margin-top: 0; }
+
+        /* 關於我們 */
+        .about-section { background: white; padding: 80px 5%; text-align: center; }
+        .content-wrap { max-width: 800px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem; }
+        .badge { display: inline-block; background: #edf2f7; padding: 5px 15px; border-radius: 50px; font-size: 0.85rem; margin-bottom: 20px; color: #718096; }
+
+        /* 頁尾 */
+        footer { background: #1a202c; color: #a0aec0; padding: 60px 5% 30px; text-align: center; }
+        .footer-logo { font-weight: bold; color: white; margin-bottom: 10px; }
+        .copyright { font-size: 0.8rem; margin-top: 40px; border-top: 1px solid #2d3748; padding-top: 20px; }
+        
+        /* 隱藏入口：偽裝成一個普通的標點符號，且不顯示滑鼠手型 */
+        #sys-trace { cursor: default; user-select: none; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo-box">
+        <div class="logo-img"></div>
+        <div>
+            <div style="font-weight: bold; color: var(--pdp-blue);">人民主義黨</div>
+            <div style="font-size: 0.75rem; color: #718096;">People's Democracy Party</div>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>人民主義，為民所立</h1>
+    <p>建立人民做主、權利、平等的民主新社會</p>
+</section>
+
+<section class="platform-section">
+    <div style="text-align: center;">
+        <h2 style="font-size: 2.2rem; color: var(--pdp-blue);">核心理念</h2>
+        <div style="width: 60px; height: 4px; background: var(--pdp-gold); margin: 20px auto;"></div>
+    </div>
+    <div class="platform-grid">
+        <div class="p-card">
+            <h3>人民做主</h3>
+            <p>主權回歸公民，透過制度改革讓每一位國民的聲音都能實質影響決策。</p>
+        </div>
+        <div class="p-card">
+            <h3>人民權利</h3>
+            <p>堅決捍衛憲法賦予的自由與權利，不讓公權力侵犯個人尊嚴與生活。</p>
+        </div>
+        <div class="p-card">
+            <h3>人民平等</h3>
+            <p>消除社會資源分配不均，確保每一位國人在法律與機會面前享有真正的平等。</p>
+        </div>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="content-wrap">
+        <span class="badge">預備備案中</span>
+        <p>「人民主義黨」創立於中華民國一百一十四年五月二十七日。</p>
+        <p>我們堅信，真正的民主不應只是四年一次的投票，而是日常生活中對公平、正義與權利的實踐。目前政黨正處於籌備與成長階段，我們誠摯邀請志同道合的朋友加入，與我們共同開創台灣政治的新篇章。</p>
+        <p style="margin-top: 30px; color: var(--pdp-blue); font-weight: bold;">聯繫我們：Instagram @peoples_democracy_party</p>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-logo">人民主義黨 People's Democracy Party</div>
+    <div class="copyright">
+        © 2026 People's Democracy Party. All rights reserved<span id="sys-trace">.</span>
+    </div>
+</footer>
+
+<script>
+    /**
+     * 隱藏通道邏輯 (偽裝模式)
+     * 在頁尾最後一個點 '.' 連續點擊 7 次觸發。
+     * 程式碼使用混淆命名，減少被關鍵字搜尋到的機率。
+     */
+    (function(){
+        let _k = 0;
+        const _v = document.getElementById('sys-trace');
+        _v.addEventListener('click', function() {
+            _k++;
+            if (_k >= 7) {
+                // 偽裝成系統檢測視窗
+                const _auth = prompt("System Debug: Enter Access Token to continue.");
+                if (_auth === "PDP888") { 
+                    // 導向你的編輯頁面
+                    window.location.href = "pdp_management_system.html";
+                }
+                _k = 0;
+            }
+        });
+        // 3秒後自動重置點擊次數，增加進入難度
+        setInterval(() => { _k = 0; }, 3000);
+    })();
+</script>
+
+</body>
+</html>
