@@ -5,96 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>人民主義黨 People's Democracy Party</title>
     <style>
-        :root {
-            --pdp-navy: #0f172a; /* 根據 Logo 深藍色調整 */
-            --pdp-gold: #b45309; /* 根據 Logo 橙色/金色調整 */
-            --pdp-blue-light: #334155;
-        }
-        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; margin: 0; background-color: #f8fafc; color: var(--pdp-navy); }
+        :root { --navy: #0f172a; --gold: #b45309; --slate: #f1f5f9; }
+        body { font-family: "PingFang TC", sans-serif; margin: 0; background: var(--slate); color: var(--navy); }
         
-        /* 導覽列 */
-        nav { background: white; padding: 10px 8%; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo-img { width: 60px; height: 60px; margin-right: 15px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        /* CSS 黨徽：不需上傳圖檔 */
+        .pdp-logo {
+            width: 50px; height: 50px; background: #1a365d; border: 2px solid var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 9px; text-align: center; margin-right: 12px;
+        }
 
-        /* 主視覺：移除無關背景，改用純色漸層突顯口號 */
+        nav { background: white; padding: 15px 8%; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
         .hero { 
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 100px 5%; color: white; text-align: center; border-bottom: 5px solid var(--pdp-gold);
+            padding: 100px 5%; color: white; text-align: center; border-bottom: 5px solid var(--gold);
         }
-        .hero h1 { font-size: 3.5rem; margin: 0; letter-spacing: 10px; font-weight: 900; }
-        .hero p { font-size: 1.6rem; margin-top: 25px; letter-spacing: 6px; color: #cbd5e1; }
+        .hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0; letter-spacing: 10px; }
+        .hero p { font-size: clamp(1rem, 3vw, 1.5rem); margin-top: 20px; letter-spacing: 5px; color: #94a3b8; }
 
-        /* 核心理念 */
-        .section { padding: 80px 8%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
-        .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; }
-        .card h3 { color: var(--pdp-gold); font-size: 1.6rem; margin-bottom: 15px; }
+        .section { padding: 60px 8%; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-        /* 建黨宣告 */
-        .about { background: #f1f5f9; padding: 60px 8%; text-align: center; line-height: 2; }
-
-        footer { background: #0f172a; color: #64748b; padding: 50px 0; text-align: center; font-size: 0.9rem; }
-        
-        /* 隱藏入口：這是一個透明的小方塊，隱藏在頁尾 */
-        #secret-portal { 
-            width: 20px; height: 20px; margin: 10px auto; 
-            background: transparent; cursor: default; 
-        }
+        footer { background: var(--navy); color: #475569; padding: 40px 0; text-align: center; }
+        /* 隱藏入口：這是一條極細的深色線 */
+        .secret-line { width: 40px; height: 1px; background: #1e293b; margin: 20px auto; cursor: default; }
     </style>
 </head>
 <body>
 
 <nav>
-    <img src="logo.jpg" alt="People's Democracy Party" class="logo-img">
+    <div class="pdp-logo">PEOPLE'S<br>DEMOCRACY</div>
     <div>
-        <div style="font-size: 1.3rem; font-weight: bold;">人民主義黨</div>
-        <div style="font-size: 0.75rem; color: #64748b;">People's Democracy Party</div>
+        <div style="font-weight: bold; font-size: 1.2rem;">人民主義黨</div>
+        <div style="font-size: 0.8rem; color: #64748b;">People's Democracy Party</div>
     </div>
 </nav>
 
 <section class="hero">
-    <h1>人民主義 統一中國</h1>
-    <p>光復中華 保衛台灣</p>
+    <h1 id="main-slogan">人民主義 統一中國</h1>
+    <p id="sub-slogan">光復中華 保衛台灣</p>
 </section>
 
 <section class="section">
-    <div style="text-align: center;">
-        <h2 style="font-size: 2rem;">三大核心理念</h2>
-    </div>
+    <h2>核心理念</h2>
     <div class="grid">
-        <div class="card"><h3>人民做主</h3><p>讓國家權力回歸人民，建立真實反映民意的參與機制。</p></div>
-        <div class="card"><h3>人民權利</h3><p>誓死捍衛公民的基本權益，確保法治社會的公平與正義。</p></div>
-        <div class="card"><h3>人民平等</h3><p>致力於消除社會資源分配不均，讓每個人都能立足於平等的起跑線。</p></div>
-    </div>
-</section>
-
-<section class="about">
-    <div style="max-width: 700px; margin: 0 auto;">
-        <h2 style="margin-bottom: 20px;">關於我們</h2>
-        <p>「人民主義黨」成立於中華民國一百一十四年五月二十七日。</p>
-        <p>目前處於籌備備案狀態，誠摯歡迎擁有相同政治理念者與我們聯繫。</p>
+        <div class="card"><h3>人民做主</h3><p>權力回歸全體國民。</p></div>
+        <div class="card"><h3>人民權利</h3><p>捍衛法律賦予的尊嚴。</p></div>
+        <div class="card"><h3>人民平等</h3><p>消除分配不公與階級。</p></div>
     </div>
 </section>
 
 <footer>
     <p>© 2026 People's Democracy Party</p>
-    <div id="secret-portal"></div>
+    <div class="secret-line" id="gate"></div>
 </footer>
 
 <script>
-    // 隱藏通道邏輯
-    let clicks = 0;
-    document.getElementById('secret-portal').addEventListener('click', () => {
-        clicks++;
-        if (clicks === 10) { // 連點 10 下
-            const pass = prompt("驗證權限：");
-            if (pass === "1140527") {
-                window.location.href = "editor.html"; 
+    // 進入隱藏頁面的密碼與邏輯
+    let count = 0;
+    document.getElementById('gate').addEventListener('click', () => {
+        count++;
+        if (count === 8) {
+            const key = prompt("Access Code:");
+            if (key === "1140527") {
+                // 跳轉至編輯頁 (我們等等會建立這個檔案)
+                window.location.href = "pdp_admin_manage.html"; 
             }
-            clicks = 0;
+            count = 0;
         }
     });
 </script>
-
 </body>
 </html>
