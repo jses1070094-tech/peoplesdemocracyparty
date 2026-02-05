@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>進入編輯模式</title>
+    <style>
+        body { font-family: sans-serif; background: #1a202c; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; color: #333; padding: 40px; border-radius: 10px; text-align: center; }
+        .btn { background: #2b6cb0; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>黨務管理提示</h2>
+        <p>若要更改網站內容，請直接在 <b>github.dev</b> 編輯器中<br>修改根目錄的 <code>index.html</code> 文字。</p>
+        <p>修改完後按下左側的「Source Control」提交並推送 (Push)。</p>
+        <a href="../" class="btn">返回首頁查看效果</a>
+    </div>
+</body>
+</html>
