@@ -2,102 +2,43 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>PDP 黨務全功能開發系統</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-    <script src="https://cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
-    
+    <title>黨務管理登入</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <style>
-        body { font-family: sans-serif; margin: 0; background: #2d3748; display: flex; flex-direction: column; height: 100vh; }
-        .header-bar { background: #1a202c; color: #c99a2e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #c99a2e; }
-        .save-btn { background: #c99a2e; color: #000; border: none; padding: 10px 25px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 16px; }
-        .save-btn:hover { background: #e2b13c; }
-        #editor-container { flex: 1; background: white; padding: 20px; overflow-y: auto; }
-        .config-panel { background: #334155; color: white; padding: 10px 20px; font-size: 14px; display: flex; gap: 20px; }
+        body { background: #1a202c; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 30px; border-radius: 8px; color: #333; width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #c99a2e; border: none; color: white; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-<div class="header-bar">
-    <div style="font-size: 1.2rem; font-weight: bold;">人民主義黨 - 雲端指揮中心</div>
-    <button class="save-btn" onclick="saveData()">發佈更新 (同步全網)</button>
-</div>
-
-<div class="config-panel">
-    <div>
-        頁面背景顏色：<input type="color" id="bgColorPicker" onchange="updateBg(this.value)">
+    <div class="login-box" id="login-ui">
+        <h2>PDP 後台登入</h2>
+        <input type="email" id="email" placeholder="電子郵件">
+        <input type="password" id="password" placeholder="密碼">
+        <button onclick="login()">登入</button>
     </div>
-    <div id="sync-status">狀態：雲端連線中...</div>
-</div>
 
-<div id="editor-container">
-    <textarea name="editor1" id="editor1"></textarea>
-</div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
+            databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
+            projectId: "weifengtimer-c7af4",
+            appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-<script>
-    // Firebase 設定
-    const firebaseConfig = {
-        apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
-        authDomain: "weifengtimer-c7af4.firebaseapp.com",
-        databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
-        projectId: "weifengtimer-c7af4",
-        storageBucket: "weifengtimer-c7af4.firebasestorage.app",
-        appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // 初始化 CKEditor (功能全開模式)
-    CKEDITOR.replace('editor1', {
-        height: '70vh',
-        uiColor: '#f1f5f9',
-        // 增加功能插件：顏色、字體、表格等
-        extraPlugins: 'colorbutton,font,justify,tableresize',
-        toolbar: [
-            { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview' ] },
-            { name: 'clipboard', items: [ 'Undo', 'Redo' ] },
-            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
-            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
-            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-            { name: 'links', items: [ 'Link', 'Unlink' ] },
-            { name: 'insert', items: [ 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak' ] },
-            '/',
-            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
-            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-            { name: 'tools', items: [ 'Maximize' ] }
-        ]
-    });
-
-    // 從 Firebase 抓取舊資料填入編輯器
-    db.ref('webContent').once('value').then((snapshot) => {
-        const data = snapshot.val();
-        if(data) {
-            CKEDITOR.instances.editor1.setData(data.html);
-            document.getElementById('bgColorPicker').value = data.bgColor || "#ffffff";
+        function login() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('password').value;
+            firebase.auth().signInWithEmailAndPassword(e, p)
+                .then(() => {
+                    // 登入成功，跳轉到編輯器頁面
+                    window.location.href = "editor.html";
+                })
+                .catch(err => alert("登入失敗：" + err.message));
         }
-        document.getElementById('sync-status').innerText = "狀態：已載入雲端內容";
-    });
-
-    function updateBg(color) {
-        document.getElementById('editor-container').style.background = color;
-    }
-
-    function saveData() {
-        const htmlData = CKEDITOR.instances.editor1.getData();
-        const bgColor = document.getElementById('bgColorPicker').value;
-
-        document.getElementById('sync-status').innerText = "狀態：發佈中...";
-
-        db.ref('webContent').set({
-            html: htmlData,
-            bgColor: bgColor
-        }).then(() => {
-            document.getElementById('sync-status').innerText = "狀態：發佈成功！";
-            alert("網頁已更新！您可以前往首頁查看效果。");
-        }).catch(err => {
-            alert("儲存失敗，請確認 Firebase Rules 是否設為 true。");
-        });
-    }
-</script>
+    </script>
 </body>
 </html>

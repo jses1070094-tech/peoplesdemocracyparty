@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>PDP 雲端編輯器</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; }
+        .toolbar { background: #111; color: #c99a2e; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .save-btn { background: #c99a2e; border: none; padding: 8px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <b>PDP 雲端指揮中心 (已登入)</b>
+        <button class="save-btn" onclick="save()">發佈更新</button>
+    </div>
+    <textarea id="myEditor"></textarea>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDcBFGFQyBWg_tQMWmjmDNYZNDA9rSYvDA",
+            databaseURL: "https://weifengtimer-c7af4-default-rtdb.firebaseio.com",
+            projectId: "weifengtimer-c7af4",
+            appId: "1:632789560940:web:929ab9a06e6bfc8ecd7249"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 身份檢查
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) window.location.href = "index.html";
+        });
+
+        tinymce.init({
+            selector: '#myEditor',
+            height: '90vh',
+            plugins: 'lists link image table charmap textcolor colorpicker',
+            toolbar: 'undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright | bullist numlist | link image table'
+        });
+
+        // 載入資料
+        db.ref('webContent').once('value').then(s => {
+            if(s.val()) tinymce.get('myEditor').setContent(s.val().html);
+        });
+
+        function save() {
+            const html = tinymce.get('myEditor').getContent();
+            db.ref('webContent').set({ html })
+                .then(() => alert("✅ 儲存成功！"))
+                .catch(e => alert("錯誤：" + e.message));
+        }
+    </script>
+</body>
+</html>
