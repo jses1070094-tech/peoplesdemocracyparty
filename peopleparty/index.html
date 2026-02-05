@@ -2,19 +2,107 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>進入編輯模式</title>
+    <title>PDP 黨務超級編輯器</title>
     <style>
-        body { font-family: sans-serif; background: #1a202c; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; color: #333; padding: 40px; border-radius: 10px; text-align: center; }
-        .btn { background: #2b6cb0; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 20px; }
+        body { font-family: sans-serif; margin: 0; background: #333; display: flex; flex-direction: column; height: 100vh; }
+        /* 上方工具列 */
+        .toolbar { background: #222; color: white; padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 2px solid #c99a2e; }
+        .btn { background: #444; color: white; border: 1px solid #666; padding: 5px 12px; cursor: pointer; border-radius: 3px; }
+        .btn:hover { background: #555; }
+        .save-btn { background: #c99a2e; border: none; font-weight: bold; }
+        
+        /* 畫布區 */
+        #canvas-wrapper { flex: 1; overflow-y: auto; padding: 40px; display: flex; justify-content: center; }
+        #web-canvas { 
+            width: 100%; max-width: 900px; background: white; min-height: 1200px; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); padding: 50px; outline: none;
+        }
+        
+        /* 預設樣式指南 */
+        .section-box { border: 1px dashed #ccc; margin-bottom: 20px; padding: 20px; position: relative; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>黨務管理提示</h2>
-        <p>若要更改網站內容，請直接在 <b>github.dev</b> 編輯器中<br>修改根目錄的 <code>index.html</code> 文字。</p>
-        <p>修改完後按下左側的「Source Control」提交並推送 (Push)。</p>
-        <a href="../" class="btn">返回首頁查看效果</a>
+
+<div class="toolbar">
+    <b style="color:#c99a2e; margin-right:20px;">PDP 萬能編輯器</b>
+    <button class="btn" onclick="addHeading()">+ 新增標題</button>
+    <button class="btn" onclick="addText()">+ 新增內文</button>
+    <button class="btn" onclick="changeBg()">更換背景色</button>
+    <button class="btn" onclick="document.execCommand('bold')"><b>B</b> 粗體</button>
+    <button class="btn" onclick="document.execCommand('foreColor', false, '#c99a2e')">金色字</button>
+    <button class="btn" onclick="document.execCommand('justifyCenter')">居中</button>
+    <button class="btn save-btn" onclick="exportHTML()">【儲存並取得程式碼】</button>
+</div>
+
+<div id="canvas-wrapper">
+    <div id="web-canvas" contenteditable="true">
+        <header style="text-align:center; background:#0a192f; color:white; padding:60px 20px; margin:-50px -50px 50px -50px;">
+            <h1 style="font-size:3.5rem; letter-spacing:10px;">人民主義 統一中國</h1>
+            <p style="font-size:1.5rem; letter-spacing:5px;">光復中華 保衛台灣</p>
+        </header>
+        
+        <div style="font-size:1.4rem; line-height:2; text-align:center;">
+            在此輸入你的政見、公告或黨員守則...
+        </div>
     </div>
+</div>
+
+<script>
+    function addHeading() {
+        const h = document.createElement('h2');
+        h.innerText = "新標題區塊";
+        h.style.color = "#0a192f";
+        h.style.borderBottom = "2px solid #c99a2e";
+        document.getElementById('web-canvas').appendChild(h);
+    }
+
+    function addText() {
+        const p = document.createElement('p');
+        p.innerText = "在此輸入新的段落內容...";
+        document.getElementById('web-canvas').appendChild(p);
+    }
+
+    function changeBg() {
+        const color = prompt("請輸入背景顏色代碼 (例如 #f4f4f4 或 white):", "white");
+        if(color) document.getElementById('web-canvas').style.background = color;
+    }
+
+    function exportHTML() {
+        const content = document.getElementById('web-canvas').innerHTML;
+        const bgColor = document.getElementById('web-canvas').style.background || 'white';
+        
+        const finalCode = `
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>人民主義黨</title>
+    <style>
+        body { margin:0; font-family:sans-serif; background:${bgColor}; }
+        footer { padding:40px; text-align:center; color:#999; font-size:12px; }
+    </style>
+</head>
+<body>
+    ${content}
+    <footer>
+        © 2026 People's Democracy Party 
+        <span onclick="location.href='./peopleparty/'" style="cursor:default;">.</span>
+    </footer>
+</body>
+</html>`;
+
+        // 彈出視窗讓使用者複製
+        const textarea = document.createElement('textarea');
+        textarea.value = finalCode.trim();
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        alert("程式碼已自動複製！\n\n現在請回到 GitHub 開啟 index.html，把全部內容全選刪除，然後按 Ctrl+V 貼上，最後儲存即可！");
+    }
+</script>
+
 </body>
 </html>

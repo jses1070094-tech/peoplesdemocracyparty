@@ -2,46 +2,34 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>人民主義黨 People's Democracy Party</title>
+    <title>人民主義黨</title>
     <style>
-        :root { --pdp-navy: #0a192f; --pdp-gold: #c99a2e; }
-        body { font-family: sans-serif; margin: 0; background: #f4f7f9; color: var(--pdp-navy); text-align: center; }
-        header { background: var(--pdp-navy); color: white; padding: 80px 20px; border-bottom: 5px solid var(--pdp-gold); }
-        .hero h1 { font-size: 3.5rem; letter-spacing: 10px; margin: 0; }
-        .hero p { font-size: 1.5rem; letter-spacing: 5px; color: #cbd5e1; }
-        .content { padding: 60px 10%; line-height: 2.5; font-size: 1.3rem; }
-        footer { margin-top: 50px; padding: 20px; color: #ccc; font-size: 0.8rem; }
-        /* 隱藏通道：頁尾的點點 */
-        #gate { cursor: default; user-select: none; }
+        body { font-family: sans-serif; margin: 0; text-align: center; background: #f4f7f9; }
+        header { background: #0a192f; color: white; padding: 60px 20px; border-bottom: 5px solid #c99a2e; }
+        .hero h1 { font-size: 3.5rem; letter-spacing: 10px; }
+        .content { padding: 50px; font-size: 1.3rem; line-height: 2; }
+        #gate { color: #ccc; cursor: default; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>人民主義 統一中國</h1>
-    <p>光復中華 保衛台灣</p>
-</header>
-
-<div class="content">
-    <p>本黨創立於中華民國一百一十四年五月二十七日。</p>
-    <p>核心理念：人民做主、人民權利、人民平等。</p>
-    <p>目前狀態：預備備案中。</p>
-</div>
-
-<footer>
-    © 2026 People's Democracy Party <span id="gate">.</span>
-</footer>
-
-<script>
-    // 連點 5 下那個點，就會跳轉到你的編輯路徑
-    let count = 0;
-    document.getElementById('gate').onclick = () => {
-        count++;
-        if(count === 5) {
-            window.location.href = "./peopleparty/"; 
-            count = 0;
+    <header>
+        <h1 id="t1">人民主義 統一中國</h1>
+        <p id="t2">光復中華 保衛台灣</p>
+    </header>
+    <div class="content" id="main-content">
+        本黨創立於中華民國一百一十四年五月二十七日。<br>
+        核心理念：人民做主、人民權利、人民平等。
+    </div>
+    <footer>© 2026 People's Democracy Party <span id="gate" onclick="goToEdit()">.</span></footer>
+    <script>
+        // 載入儲存的內容
+        if(localStorage.getItem('pdp_html')) {
+            document.body.innerHTML = localStorage.getItem('pdp_html');
         }
-    };
-</script>
+        function goToEdit() {
+            let count = window.cnt || 0; count++; window.cnt = count;
+            if(count === 5) window.location.href = "./peopleparty/";
+        }
+    </script>
 </body>
 </html>
